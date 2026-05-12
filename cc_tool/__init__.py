@@ -1,1 +1,1 @@
-"""cc_tool package — Intelligent CC Suggestion Tool"""
+# Marks this directory as a Python package

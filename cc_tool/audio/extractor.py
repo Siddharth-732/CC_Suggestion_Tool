@@ -1,49 +1,37 @@
-"""
-Audio Extractor — extracts audio track from a video file (PR 1)
-"""
 import os
 import subprocess
 from pathlib import Path
 
+# Direct path to ffmpeg to bypass Windows Path issues
+FFMPEG_PATH = r"Path->ffmpeg.exe" #Had problems with the dependencies so i had to manually hardcde the ffmpeg path here. For smoke test kindly do the same to avoid problems.
 
 def extract_audio(video_path: str, output_wav: str | None = None) -> str:
-    """
-    Extract the audio track from a video file and save it as a 16kHz mono WAV.
-
-    Args:
-        video_path: Path to the input video file (.mp4, .mkv, etc.)
-        output_wav: Optional path for the output WAV file.
-                    Defaults to <video_name>.wav in a temp directory.
-
-    Returns:
-        Path to the extracted WAV file.
-
-    Raises:
-        FileNotFoundError: If the video file does not exist.
-        RuntimeError: If ffmpeg fails to extract audio.
-    """
     video_path = Path(video_path)
     if not video_path.exists():
         raise FileNotFoundError(f"Video file not found: {video_path}")
-
+    
     if output_wav is None:
         os.makedirs("outputs/audio", exist_ok=True)
         output_wav = f"outputs/audio/{video_path.stem}.wav"
-
+    
+    # Use the absolute path to ffmpeg
     cmd = [
-        "ffmpeg", "-y",
+        FFMPEG_PATH, "-y",
         "-i", str(video_path),
-        "-vn",                   # no video
-        "-acodec", "pcm_s16le",  # 16-bit PCM
-        "-ar", "16000",          # 16kHz sample rate (required by YAMNet)
-        "-ac", "1",              # mono
-        str(output_wav),
+        "-vn",
+        "-acodec", "pcm_s16le",
+        "-ar", "16000",
+        "-ac", "1",
+        str(output_wav)
     ]
+    
+    # Check if ffmpeg exists at the hardcoded path
+    if not os.path.exists(FFMPEG_PATH):
+        # Fallback to just "ffmpeg" if the hardcoded one isn't there
+        cmd[0] = "ffmpeg"
 
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
-        raise RuntimeError(
-            f"ffmpeg audio extraction failed:\n{result.stderr}"
-        )
-
+        raise RuntimeError(f"FFmpeg failed: {result.stderr}")
+        
     return str(output_wav)
