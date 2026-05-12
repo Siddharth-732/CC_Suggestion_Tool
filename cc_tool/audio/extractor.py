@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 
 # Direct path to ffmpeg to bypass Windows Path issues
-FFMPEG_PATH = r"C:\Users\siddh\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1.1-full_build\bin\ffmpeg.exe"
+FFMPEG_PATH = r"Path->ffmpeg.exe" #Had problems with the dependencies so i had to manually hardcde the ffmpeg path here. For smoke test kindly do the same to avoid problems.
 
 def extract_audio(video_path: str, output_wav: str | None = None) -> str:
     video_path = Path(video_path)
