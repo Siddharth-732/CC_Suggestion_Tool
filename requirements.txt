@@ -1,0 +1,13 @@
+# PR 1 — Sound Event Detection
+tensorflow>=2.10
+tensorflow_hub          # YAMNet model
+numpy
+soundfile               # WAV I/O
+moviepy                 # Audio extraction from video
+ffmpeg-python           # Low-level ffmpeg bindings
+pydantic>=2.0           # Data models / validation
+
+# PR 2 — Speaker Reaction Detection
+opencv-python           # Frame extraction & image processing
+mediapipe>=0.10         # Face mesh + pose landmarks
+Pillow                  # Image utilities
